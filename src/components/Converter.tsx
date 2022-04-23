@@ -61,8 +61,6 @@ const Converter = () => {
           currency,
           value2
         );
-        console.log(result);
-        console.log(currency);
         setState4(result.result[currency]);
       }
     }
