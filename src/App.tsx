@@ -3,8 +3,8 @@ import React from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Container from "./components/layout/Container";
-import styles from "./App.module.scss";
 import Converter from "./components/Converter";
+import styles from "./App.module.scss";
 
 const App = () => {
   return (
