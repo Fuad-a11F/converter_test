@@ -1,25 +1,20 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
-import AuthReducer from "./AuthSlice";
-import ContactReducer from "./ContactSlice";
-import getContactSaga from "./saga/sagaContact";
-import getUserSaga from "./saga/sagaUser";
+import currencySlice from "./currencySlice";
+import getCurrencySaga from "./saga/sagaCurrency";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const middleware = [
-  ...getDefaultMiddleware({ thunk: false, serializableCheck: false }),
-  sagaMiddleware,
-];
-
 export const store = configureStore({
-  reducer: { AuthReducer, ContactReducer },
-  middleware,
+  reducer: { currencySlice },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ thunk: false, serializableCheck: false }).concat(
+      sagaMiddleware
+    ),
 });
 
-sagaMiddleware.run(getContactSaga);
-sagaMiddleware.run(getUserSaga);
+sagaMiddleware.run(getCurrencySaga);
 
 export type RootState = ReturnType<typeof store.getState>;
 

@@ -1,24 +1,20 @@
 import { call, takeEvery, put } from "redux-saga/effects";
-import { AxiosResponse } from "axios";
 
 import { sagaActions } from "./sagaAction";
-import {setEUR, setUSD} from "../currencySlice";
-import {currencyApi} from "../../shared/api/CurrencyApi";
+import { setEUR, setUSD } from "../currencySlice";
+import { currencyApi } from "../../shared/api/CurrencyApi";
+import { ResponseSaga } from "../../shared/types/responseSaga";
 
 function* fetchUsd() {
-  const contact: AxiosResponse<any> = yield call(() =>
-    currencyApi.getUsdToUah()
-  );
+  const contact: ResponseSaga = yield call(() => currencyApi.getUsdToUah());
 
-  yield put(setUSD(contact.data));
+  yield put(setUSD(contact.result.UAH!));
 }
 
 function* fetchEur() {
-  const contact: AxiosResponse<any> = yield call(() =>
-    currencyApi.getEurToUah()
-  );
+  const contact: ResponseSaga = yield call(() => currencyApi.getEurToUah());
 
-  yield put(setEUR(contact.data));
+  yield put(setEUR(contact.result.UAH!));
 }
 
 function* getCurrencySaga() {
