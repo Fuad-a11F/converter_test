@@ -89,9 +89,15 @@ const Converter = () => {
           }
           data-converter={FIRST}
         >
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="UAH">UAH</option>
+          <option disabled={currency2 === "USD"} value="USD">
+            USD
+          </option>
+          <option disabled={currency2 === "EUR"} value="EUR">
+            EUR
+          </option>
+          <option disabled={currency2 === "UAH"} value="UAH">
+            UAH
+          </option>
         </select>
       </div>
 
@@ -114,9 +120,15 @@ const Converter = () => {
           }
           data-converter={SECOND}
         >
-          <option value="UAH">UAH</option>
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
+          <option disabled={currency === "UAH"} value="UAH">
+            UAH
+          </option>
+          <option disabled={currency === "USD"} value="USD">
+            USD
+          </option>
+          <option disabled={currency === "EUR"} value="EUR">
+            EUR
+          </option>
         </select>
       </div>
     </div>
