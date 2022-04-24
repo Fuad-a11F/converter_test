@@ -1,11 +1,12 @@
 import React, { FC } from "react";
 
-import styles from "../Converter.module.scss";
+import styles from "./ConverterForm.module.scss";
 
 interface ConverterFormPropTypes {
   value: string;
   currency: string;
   type: string;
+  placeholder: string;
   converterAmount: Function;
   converterCurrency: Function;
 }
@@ -16,16 +17,17 @@ const ConverterForm: FC<ConverterFormPropTypes> = ({
   converterAmount,
   converterCurrency,
   type,
+  placeholder,
 }) => {
   return (
-    <>
+    <div className={styles.form}>
       <input
         value={value}
         onChange={(e) => converterAmount(e)}
         data-converter={type}
         type="number"
         className={styles.input}
-        placeholder={"Введите сумму"}
+        placeholder={placeholder}
       />
 
       <select
@@ -43,7 +45,7 @@ const ConverterForm: FC<ConverterFormPropTypes> = ({
           EUR
         </option>
       </select>
-    </>
+    </div>
   );
 };
 

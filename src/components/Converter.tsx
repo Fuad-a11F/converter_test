@@ -17,6 +17,10 @@ const Converter = () => {
     const amount = event.target.value;
     let result;
 
+    if (Number(amount) < 0) return;
+
+    console.log(amount);
+
     if (amount.length === 0) {
       setValue2("");
       setValue("");
@@ -76,6 +80,7 @@ const Converter = () => {
           converterCurrency={converterCurrency}
           currency={currency2}
           type={FIRST}
+          placeholder={"Введите сумму"}
         />
       </div>
 
@@ -88,6 +93,7 @@ const Converter = () => {
           converterCurrency={converterCurrency}
           currency={currency}
           type={SECOND}
+          placeholder={"Ответ"}
         />
       </div>
     </div>
