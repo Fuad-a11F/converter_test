@@ -19,8 +19,6 @@ const Converter = () => {
 
     if (Number(amount) < 0) return;
 
-    console.log(amount);
-
     if (amount.length === 0) {
       setValue2("");
       setValue("");
