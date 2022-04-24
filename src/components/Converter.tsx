@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useState } from "react";
 
 import styles from "./Converter.module.scss";
-import { currencyApi } from "../shared/api/CurrencyApi";
 import { FIRST, SECOND } from "../utils/constant";
 import ArrowSvg from "./svg/ArrowSvg";
+import { getAmount } from "../utils/getAmount";
+import ConverterForm from "./parts/ConverterForm";
 
 const Converter = () => {
   const [value, setValue] = useState<string>("");
@@ -11,58 +12,56 @@ const Converter = () => {
   const [value2, setValue2] = useState<string>("");
   const [currency2, setCurrency2] = useState<string>("UAH");
 
-  const converterAmount = async (
-    event: ChangeEvent<HTMLInputElement>,
-    setState: Function,
-    setState2: Function
-  ) => {
+  const converterAmount = async (event: ChangeEvent<HTMLInputElement>) => {
+    const type = event.target.dataset?.converter;
     const amount = event.target.value;
+    let result;
 
-    setState(amount);
+    if (amount.length === 0) {
+      setValue2("");
+      setValue("");
+      return;
+    }
 
-    if (amount.length !== 0) {
-      let result;
+    switch (type) {
+      case FIRST:
+        setValue(amount);
+        result = await getAmount(currency, currency2, amount, type);
+        setValue2(result);
+        break;
 
-      if (event.target.dataset?.converter === FIRST) {
-        result = await currencyApi.getAmount(currency, currency2, amount);
-        setState2(result.result[currency2]);
-      } else if (event.target.dataset?.converter === SECOND) {
-        result = await currencyApi.getAmount(currency2, currency, amount);
-        setState2(result.result[currency]);
-      }
-    } else {
-      setState2(amount);
+      case SECOND:
+        setValue2(amount);
+        result = await getAmount(currency, currency2, amount, type);
+        setValue(result);
+        break;
     }
   };
 
-  const converterCurrency = async (
-    event: ChangeEvent<HTMLSelectElement>,
-    setState: Function,
-    setState3: Function,
-    setState4: Function
-  ) => {
+  const converterCurrency = async (event: ChangeEvent<HTMLSelectElement>) => {
     const currency_current = event.target.value;
+    const type = event.target.dataset?.converter;
+    let result;
 
-    setState(currency_current);
+    if (value === "" && value2 === "") {
+      type === FIRST
+        ? setCurrency(currency_current)
+        : setCurrency2(currency_current);
+      return;
+    }
 
-    if (value !== "" && value2 !== "") {
-      let result;
+    switch (type) {
+      case FIRST:
+        setCurrency(currency_current);
+        result = await getAmount(currency_current, currency2, value, type);
+        setValue2(result);
+        break;
 
-      if (event.target.dataset?.converter === FIRST) {
-        result = await currencyApi.getAmount(
-          currency_current,
-          currency2,
-          value
-        );
-        setState4(result.result[currency2]);
-      } else if (event.target.dataset?.converter === SECOND) {
-        result = await currencyApi.getAmount(
-          currency_current,
-          currency,
-          value2
-        );
-        setState4(result.result[currency]);
-      }
+      case SECOND:
+        setCurrency2(currency_current);
+        result = await getAmount(currency_current, currency, value2, type);
+        setValue(result);
+        break;
     }
   };
 
@@ -71,63 +70,25 @@ const Converter = () => {
       <h1>Онлайн конвертер</h1>
 
       <div className={styles.mb_30}>
-        <input
+        <ConverterForm
+          converterAmount={converterAmount}
           value={value}
-          onChange={(e) => converterAmount(e, setValue, setValue2)}
-          data-converter={FIRST}
-          type="number"
-          className={styles.input}
-          placeholder={"Введите сумму"}
+          converterCurrency={converterCurrency}
+          currency={currency2}
+          type={FIRST}
         />
-
-        <select
-          className={styles.select}
-          onChange={(e) =>
-            converterCurrency(e, setCurrency, setValue, setValue2)
-          }
-          data-converter={FIRST}
-        >
-          <option disabled={currency2 === "USD"} value="USD">
-            USD
-          </option>
-          <option disabled={currency2 === "EUR"} value="EUR">
-            EUR
-          </option>
-          <option disabled={currency2 === "UAH"} value="UAH">
-            UAH
-          </option>
-        </select>
       </div>
 
       <ArrowSvg />
 
       <div className={styles.mt_30}>
-        <input
+        <ConverterForm
+          converterAmount={converterAmount}
           value={value2}
-          onChange={(e) => converterAmount(e, setValue2, setValue)}
-          data-converter={SECOND}
-          type="number"
-          className={styles.input}
-          placeholder={"Ответ"}
+          converterCurrency={converterCurrency}
+          currency={currency}
+          type={SECOND}
         />
-
-        <select
-          className={styles.select}
-          onChange={(e) =>
-            converterCurrency(e, setCurrency2, setValue2, setValue)
-          }
-          data-converter={SECOND}
-        >
-          <option disabled={currency === "UAH"} value="UAH">
-            UAH
-          </option>
-          <option disabled={currency === "USD"} value="USD">
-            USD
-          </option>
-          <option disabled={currency === "EUR"} value="EUR">
-            EUR
-          </option>
-        </select>
       </div>
     </div>
   );
